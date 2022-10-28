@@ -2,12 +2,20 @@ apiVersion: v1
 kind: Service
 metadata:
     labels:
+        {{ if .Values.isApplicationSet }}
         app: {{ template "hello-world.name" . }}-{{ .Values.release }}
+        {{ else }}
+        app: {{ template "hello-world.name" . }}
+        {{ end }}
         chart: {{ .Chart.Name }}-{{ .Chart.Version }}
         heritage: {{ .Release.Service }}
         release: {{ .Release.Name }}
         appver: {{ .Values.release }}
+    {{ if .Values.isApplicationSet }}
     name: {{ template "hello-world.name" . }}-{{ .Values.release }}
+    {{ else }}
+    name: {{ template "hello-world.name" . }}
+    {{ end }}
 spec:
     type: ClusterIP
     ports:
@@ -15,4 +23,8 @@ spec:
           port: 80
           targetPort: 80
     selector:
+        {{ if .Values.isApplicationSet }}
         app: {{ template "hello-world.name" . }}-{{ .Values.release }}
+        {{ else }}
+        app: {{ template "hello-world.name" . }}
+        {{ end }}

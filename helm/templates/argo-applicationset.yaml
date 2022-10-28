@@ -23,6 +23,8 @@ spec:
         path: helm/
         helm:
           parameters:
+          - name: "isApplicationSet"
+            value: "true"
           - name: "release"
             value: "{{"{{"}}head_sha{{"}}"}}"
           - name: "ingress.hosts[0]"
@@ -36,6 +38,7 @@ spec:
       syncPolicy:
         automated:
           selfHeal: true
+          prune: true
         syncOptions:
           - ApplyOutOfSync=true
         retry:
