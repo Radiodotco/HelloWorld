@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: hello-world
+  namespace: argocd
+spec:
+  generators:
+  - pullRequest:
+      github:
+        # The GitHub organization or user.
+        owner: Radiodotco
+        # The Github repository
+        repo: helloworld
+  template:
+    metadata:
+      name: 'hello-world-{{branch}}-{{number}}'
+    spec:
+      source:
+        repoURL: 'https://github.com/Radiodotco/helloworld.git'
+        targetRevision: '{{head_sha}}'
+        path: helm/
+        helm:
+          parameters:
+          - name: "image.tag"
+            value: "pull-{{head_sha}}"
+      project: default
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: default
