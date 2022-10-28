@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+
+jobs:
+  build:
+    name: Building and Pushing the Image
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Build, tag, and push image to DockerHub
+      id: build-image
+      run: |
+        # Build a docker container and push to DockerHub
+        git_hash=$(git rev-parse --short "$GITHUB_SHA")
+        docker build -t radiodotco/hello-world:${GITHUB_REF##*/}-$git_hash .
+        echo "Pushing image to DockerHub..."
+        docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+        echo "::set-output name=image::radiodotco/hello-world:${GITHUB_REF##*/}-$git_hash"
+
+    - name: Update Version
+      run: |
+          git_hash=$(git rev-parse --short "$GITHUB_SHA")
+          version=$(cat ./helm/values.yaml | grep release: | awk '{print $2}')
+          sed -i "s/$version/${GITHUB_REF##*/}-$git_hash/" ./helm/values.yaml
+
+    - name: Commit and push changes
+      uses: devops-infra/action-commit-push@v0.3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        commit_message: Version updated
