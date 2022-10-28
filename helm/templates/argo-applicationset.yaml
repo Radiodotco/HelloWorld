@@ -28,11 +28,11 @@ spec:
           - name: "release"
             value: "{{"{{"}}head_sha{{"}}"}}"
           - name: "ingress.hosts[0]"
-            value: "pull-{{"{{"}}head_short_sha{{"}}"}}.hello-world.poolswitch.pw"
+            value: "pull-{{"{{"}}number{{"}}"}}.hello-world.poolswitch.pw"
           - name: "ingress.tls[0].hosts[0]"
-            value: "pull-{{"{{"}}head_short_sha{{"}}"}}.hello-world.poolswitch.pw"
+            value: "pull-{{"{{"}}number{{"}}"}}.hello-world.poolswitch.pw"
           - name: "ingress.tls[0].secretName"
-            value: "hello-world-tls-{{"{{"}}head_short_sha{{"}}"}}"
+            value: "hello-world-tls-{{"{{"}}number{{"}}"}}"
       project: default
       destination:
         server: https://kubernetes.default.svc
