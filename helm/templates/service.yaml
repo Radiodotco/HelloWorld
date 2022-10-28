@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+    labels:
+        app: {{ template "hello-world.name" . }}
+        chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+        heritage: {{ .Release.Service }}
+        release: {{ .Release.Name }}
+        appver: {{ .Values.release }}
+    name: {{ template "hello-world.name" . }}
+spec:
+    type: ClusterIP
+    ports:
+        - name: http
+          port: 80
+          targetPort: 80
+    selector:
+        app: {{ template "hello-world.name" . }} 

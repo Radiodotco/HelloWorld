@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    labels:
+        app: {{ template "hello-world.name" . }}
+        chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+        heritage: {{ .Release.Service }}
+        release: {{ .Release.Name }}
+        appver: {{ .Values.release }}
+    name: {{ template "hello-world.name" . }}
+spec:
+    revisionHistoryLimit: 2
+    minReadySeconds: 5
+    replicas: {{ .Values.replicas }}
+    selector:
+        matchLabels:
+            app: {{ template "hello-world.name" . }}
+    template:
+        metadata:
+            name: {{ template "hello-world.name" . }}
+            labels:
+                app: {{ template "hello-world.name" . }}
+                release: {{ .Release.Name }}
+                appver: {{ .Values.release }}
+        spec:
+            containers:
+                - name: server
+                  image: {{ .Values.image }}:{{ .Values.release | default "latest" }}
+                  imagePullPolicy: Always
+                  ports:
+                  - name: http
+                    containerPort: 80
+                    protocol: TCP
+                  livenessProbe:
+                    httpGet:
+                        path: /
+                        port: 80
+                    initialDelaySeconds: 30
+                  readinessProbe:
+                    httpGet:
+                        path: /
+                        port: 80
+                    timeoutSeconds: 5
+                  resources:
+                    requests:
+                      cpu: 0.05
+                      memory: 10Mi

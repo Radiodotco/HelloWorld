@@ -1,0 +1,4 @@
+apiVersion: v1
+description: Hello World Test Server
+name: hello-world
+version: 0.0.1
