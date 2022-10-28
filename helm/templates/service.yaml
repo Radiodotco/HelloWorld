@@ -3,7 +3,7 @@ kind: Service
 metadata:
     labels:
         {{ if .Values.isApplicationSet }}
-        app: {{ template "hello-world.name" . }}-{{ .Values.release }}
+        app: {{ template "hello-world.name" . }}-{{ .Values.release | trunc 8}}
         {{ else }}
         app: {{ template "hello-world.name" . }}
         {{ end }}
@@ -12,7 +12,7 @@ metadata:
         release: {{ .Release.Name }}
         appver: {{ .Values.release }}
     {{ if .Values.isApplicationSet }}
-    name: {{ template "hello-world.name" . }}-{{ .Values.release }}
+    name: {{ template "hello-world.name" . }}-{{ .Values.release | trunc 8}}
     {{ else }}
     name: {{ template "hello-world.name" . }}
     {{ end }}
@@ -24,7 +24,7 @@ spec:
           targetPort: 80
     selector:
         {{ if .Values.isApplicationSet }}
-        app: {{ template "hello-world.name" . }}-{{ .Values.release }}
+        app: {{ template "hello-world.name" . }}-{{ .Values.release | trunc 8}}
         {{ else }}
         app: {{ template "hello-world.name" . }}
         {{ end }}
