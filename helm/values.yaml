@@ -1,4 +1,4 @@
-release: master-36520b3
+release: master-cc2c6b5
 replicas: 1
 image: radiodotco/hello-world
 isApplicationSet: false
