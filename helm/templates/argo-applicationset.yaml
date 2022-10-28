@@ -18,17 +18,26 @@ spec:
     spec:
       source:
         repoURL: 'https://github.com/Radiodotco/helloworld.git'
-        targetRevision: '{{"{{"}}head_sha{{"}}"}}'
+        targetRevision: '{{"{{"}}head_short_sha{{"}}"}}'
         path: helm/
         helm:
           parameters:
           - name: "release"
-            value: "pull-{{"{{"}}head_sha{{"}}"}}"
+            value: "pull-{{"{{"}}head_short_sha{{"}}"}}"
           - name: "ingress.hosts[0]"
-            value: "pull-{{"{{"}}head_sha{{"}}"}}.hello-world.poolswitch.pw"
+            value: "pull-{{"{{"}}head_short_sha{{"}}"}}.hello-world.poolswitch.pw"
           - name: "ingress.tls[0].hosts[0]"
-            value: "pull-{{"{{"}}head_sha{{"}}"}}.hello-world.poolswitch.pw"
+            value: "pull-{{"{{"}}head_short_sha{{"}}"}}.hello-world.poolswitch.pw"
       project: default
       destination:
         server: https://kubernetes.default.svc
         namespace: default
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - PruneLast=true
+          - ApplyOutOfSync=true
+        retry:
+            limit: 5
