@@ -20,4 +20,5 @@ jobs:
         docker build -t radiodotco/hello-world:$git_hash .
         echo "Pushing image to DockerHub..."
         docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+        docker push radiodotco/hello-world:$git_hash
         echo "::set-output name=image::radiodotco/hello-world:$git_hash"
