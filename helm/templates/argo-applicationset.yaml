@@ -31,6 +31,8 @@ spec:
             value: "pull-{{"{{"}}head_short_sha{{"}}"}}.hello-world.poolswitch.pw"
           - name: "ingress.tls[0].hosts[0]"
             value: "pull-{{"{{"}}head_short_sha{{"}}"}}.hello-world.poolswitch.pw"
+          - name: "ingress.tls[0].secretName"
+            value: "hello-world-tls"
       project: default
       destination:
         server: https://kubernetes.default.svc
