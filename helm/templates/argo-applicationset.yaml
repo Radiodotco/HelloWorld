@@ -6,6 +6,7 @@ metadata:
 spec:
   generators:
   - pullRequest:
+      requeueAfterSeconds: 30
       github:
         # The GitHub organization or user.
         owner: Radiodotco
@@ -13,7 +14,7 @@ spec:
         repo: helloworld
   template:
     metadata:
-      name: 'hello-world-{{"{{"}}branch{{"}}"}}-{{"{{"}}number{{"}}"}}'
+      name: 'hello-world-{{"{{"}}number{{"}}"}}'
     spec:
       source:
         repoURL: 'https://github.com/Radiodotco/helloworld.git'
@@ -21,8 +22,12 @@ spec:
         path: helm/
         helm:
           parameters:
-          - name: "image.tag"
+          - name: "release"
             value: "pull-{{"{{"}}head_sha{{"}}"}}"
+          - name: "ingress.hosts[0]"
+            value: "pull-{{"{{"}}head_sha{{"}}"}}.hello-world.poolswitch.pw"
+          - name: "ingress.tls[0].hosts[0]"
+            value: "pull-{{"{{"}}head_sha{{"}}"}}.hello-world.poolswitch.pw"
       project: default
       destination:
         server: https://kubernetes.default.svc
