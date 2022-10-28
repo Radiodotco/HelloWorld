@@ -15,7 +15,7 @@ spec:
         appSecretName: argocd-repo-creds-github-app-radio-co
   template:
     metadata:
-      name: 'hello-world-{{"{{"}}branch{{"}}"}}-{{"{{"}}number{{"}}"}}'
+      name: 'hello-world-{{"{{"}}number{{"}}"}}'
     spec:
       source:
         repoURL: 'https://github.com/Radiodotco/helloworld.git'
