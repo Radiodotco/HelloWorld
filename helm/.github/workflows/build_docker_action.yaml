@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+
+jobs:
+  build:
+    name: Building and Pushing the Image
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Build, tag, and push image to DockerHub
+      id: build-image
+      run: |
+        # Build a docker container and push to DockerHub
+        git_hash=$(git rev-parse "$GITHUB_SHA")
+        docker build -t radiodotco/hello-world:$git_hash .
+        echo "Pushing image to DockerHub..."
+        docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+        docker push radiodotco/hello-world:$git_hash
+        echo "::set-output name=image::radiodotco/hello-world:$git_hash"
