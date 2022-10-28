@@ -3,6 +3,9 @@ replicas: 1
 image: radiodotco/hello-world
 isApplicationSet: false
 
+certmanager:
+  enabled: true
+
 ingress:
   enabled: true
   paths:
