@@ -6,11 +6,13 @@ metadata:
 spec:
   generators:
   - pullRequest:
+      requeueAfterSeconds: 300
       github:
         # The GitHub organization or user.
         owner: Radiodotco
         # The Github repository
         repo: helloworld
+        appSecretName: argocd-repo-creds-github-app-radio-co
   template:
     metadata:
       name: 'hello-world-{{"{{"}}branch{{"}}"}}-{{"{{"}}number{{"}}"}}'
@@ -21,9 +23,20 @@ spec:
         path: helm/
         helm:
           parameters:
-          - name: "image.tag"
-            value: "pull-{{"{{"}}head_sha{{"}}"}}"
+          - name: "release"
+            value: "{{"{{"}}head_sha{{"}}"}}"
+          - name: "ingress.hosts[0]"
+            value: "pull-{{"{{"}}head_short_sha{{"}}"}}.hello-world.poolswitch.pw"
+          - name: "ingress.tls[0].hosts[0]"
+            value: "pull-{{"{{"}}head_short_sha{{"}}"}}.hello-world.poolswitch.pw"
       project: default
       destination:
         server: https://kubernetes.default.svc
         namespace: default
+      syncPolicy:
+        automated:
+          selfHeal: true
+        syncOptions:
+          - ApplyOutOfSync=true
+        retry:
+            limit: 5
